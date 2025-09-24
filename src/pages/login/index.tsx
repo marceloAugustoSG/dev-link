@@ -1,14 +1,31 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Input from "../../components/social/Input";
 import { useState, type FormEvent } from "react";
 import { auth } from "../../services/firebaseConnection";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navegate = useNavigate();
 
     function handleSubmitLogin(e: FormEvent) {
         e.preventDefault();
+        if (email === '' || password === '') {
+            alert("Preencha todos os campos!");
+            return;
+        }
+
+        signInWithEmailAndPassword(auth, email, password)
+            .then(() => {
+                console.log("Usuário logado com sucesso!");
+                navegate('/admin', { replace: true });
+
+            })
+            .catch((error) => {
+                console.log(error);
+                alert("Erro ao tentar fazer o login!");
+            })
         console.log({ email, password });
     }
     return <div className="flex w-full h-screen items-center justify-center flex-col">

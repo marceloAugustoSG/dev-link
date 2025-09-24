@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import Input from "../../components/social/Input";
 import { useState, type FormEvent } from "react";
+import { auth } from "../../services/firebaseConnection";
 
 export default function Login() {
     const [email, setEmail] = useState('');

@@ -1,16 +1,49 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Header } from "../../components/Header";
 import Input from "../../components/social/Input";
 import { FiTrash } from "react-icons/fi";
 import { db } from "../../services/firebaseConnection";
 import { addDoc, collection, onSnapshot, query, orderBy, doc, deleteDoc, updateDoc } from "firebase/firestore";
 
+interface LinkProps {
+    id: string;
+    name: string;
+    url: string;
+    backgroundColor: string;
+    color: string;
+
+}
 
 export default function Admin() {
     const [nameInput, setNameInput] = useState("");
     const [urlInput, setUrlInput] = useState("");
     const [colorInput, setColorInput] = useState("#f1f1f1");
     const [backgroundColorInput, setBackgroundColorInput] = useState("#121212");
+    const [links, setLinks] = useState<LinkProps[]>([]);
+    useEffect(() => {
+
+        const linksRef = collection(db, "links");
+        const queryRef = query(linksRef, orderBy("created", "asc"));
+        const unsub = onSnapshot(queryRef, (snapshot) => {
+            let lista: LinkProps[] = [];
+
+            snapshot.forEach((doc) => {
+                lista.push({
+                    id: doc.id,
+                    name: doc.data().name,
+                    url: doc.data().url,
+                    backgroundColor: doc.data().backgroundColor,
+                    color: doc.data().color
+                });
+            });
+
+            console.log(lista);
+            setLinks(lista);
+        });
+
+        return () => unsub();
+
+    }, []);
 
     async function handleRegister(e: FormEvent) {
         e.preventDefault();

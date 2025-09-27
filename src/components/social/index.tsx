@@ -1,17 +1,17 @@
 import type { ReactNode } from "react"
 
 interface SocialProps {
-    icon: ReactNode
+    children: ReactNode
     url: string
 
 
 }
 
-export function Social({ url, icon }: SocialProps) {
+export function Social({ url, children }: SocialProps) {
     return (
         <a href={url}
             rel="noopener noreferrer">
-            {icon}
+            {children}
         </a>
     )
 }
